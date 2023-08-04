@@ -181,6 +181,20 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+RUN pip3 install flask
+
+RUN curl -L --create-dir https://storage.openvinotoolkit.org/repositories/open_model_zoo/2022.1/models_bin/2/horizontal-text-detection-0001/FP32/horizontal-text-detection-0001.bin -o ${DLS_HOME}/models/horizontal-text-detection-0001.bin https://storage.openvinotoolkit.org/repositories/open_model_zoo/2022.1/models_bin/2/horizontal-text-detection-0001/FP32/horizontal-text-detection-0001.xml -o ${DLS_HOME}/models/horizontal-text-detection-0001.xml
+
+RUN apt-get update \
+    && apt-get install -y git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN cd ${DLS_HOME} \
+    && git clone https://github.com/gnunu/openyurt-solutions.git
+
+RUN chown -R dlstreamer:dlstreamer ${DLS_HOME}
+
 WORKDIR ${DLS_HOME}
 USER dlstreamer
-CMD ["/bin/bash"]
+CMD ["/home/dlstreamer/openyurt-solutions/onvif/pipeline.py"]
